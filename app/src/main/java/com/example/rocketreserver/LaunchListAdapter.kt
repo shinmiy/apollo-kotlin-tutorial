@@ -11,6 +11,7 @@ class LaunchListAdapter(
 ) : RecyclerView.Adapter<LaunchListAdapter.ViewHolder>() {
 
     var onEndOfListReached: (() -> Unit)? = null
+    var onItemClicked: ((LaunchListQuery.Launch) -> Unit)? = null
 
     class ViewHolder(val binding: LaunchItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -29,6 +30,9 @@ class LaunchListAdapter(
         holder.binding.missionName.text = launch.mission?.name
         holder.binding.missionPatch.load(launch.mission?.missionPatch) {
             placeholder(R.drawable.ic_placeholder)
+        }
+        holder.binding.root.setOnClickListener {
+            onItemClicked?.invoke(launch)
         }
 
         if (position == launches.lastIndex) {
