@@ -2,6 +2,9 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("androidx.navigation.safeargs.kotlin")
+
+    // 1. Apply the plugin
+    id("com.apollographql.apollo3").version("3.6.0")
 }
 
 android {
@@ -47,4 +50,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+
+    // 3. Add dependencies
+    implementation("com.apollographql.apollo3:apollo-runtime:3.6.0")
+}
+
+// 2. Configure the Apollo Gradle plugin
+apollo {
+    packageName.set("com.example.rocketreserver")
 }
