@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.apollographql.apollo3.exception.ApolloException
 import com.example.rocketreserver.databinding.LaunchListFragmentBinding
 
 class LaunchListFragment : Fragment() {
@@ -23,9 +25,18 @@ class LaunchListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lifecycleScope.launchWhenResumed {
-            val response = apolloClient.query(LaunchListQuery()).execute()
+            val response = try {
+                apolloClient.query(LaunchListQuery()).execute()
+            } catch (e: ApolloException) {
+                Log.d("LaunchList", "Failure", e)
+                null
+            }
 
-            Log.d("LaunchList", "Success ${response.data}")
+            val launches = response?.data?.launches?.launches?.filterNotNull()
+            if (launches != null && !response.hasErrors()) {
+                binding.launches.layoutManager = LinearLayoutManager(requireContext())
+                binding.launches.adapter = LaunchListAdapter(launches)
+            }
         }
     }
 }
